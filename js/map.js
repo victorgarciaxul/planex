@@ -188,12 +188,9 @@ function initMap() {
 }
 
 /*
-  Arranque: usamos 'load' (todos los recursos cargados) en lugar de
-  DOMContentLoaded para garantizar que Leaflet CDN esté disponible.
-  Si DOMContentLoaded ya ha ocurrido, ejecutamos inmediatamente.
+  Los scripts están al final del <body> → el DOM ya existe cuando se ejecutan.
+  Leaflet.js carga ANTES que map.js (orden declarado en HTML), por tanto
+  L está disponible de forma síncrona. Llamamos initMap directamente.
+  El setTimeout garantiza que el navegador haya pintado el div antes de medir.
 */
-if (document.readyState === 'complete') {
-  initMap();
-} else {
-  window.addEventListener('load', initMap);
-}
+setTimeout(initMap, 0);

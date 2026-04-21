@@ -38,8 +38,9 @@ const CONTRAST_FILTERS = {
 function applyA11ySettings(s) {
   const html = document.documentElement;
 
-  /* 1. Escala de página (zoom) ─ soportado en todos los browsers modernos */
-  html.style.zoom = `${s.scale}%`;
+  /* 1. Escala de página (zoom) ─ solo aplicar si no es el 100% por defecto
+        zoom:100% crea un stacking context que rompe cálculos de Leaflet */
+  html.style.zoom = s.scale === '100' ? '' : `${s.scale}%`;
 
   /* 2. Tamaño de letra ─ modifica font-size raíz en px (sin unidades circulares) */
   html.style.fontSize = `${s.font}px`;

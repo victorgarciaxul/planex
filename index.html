@@ -8,9 +8,8 @@
     content="PlaNex – Hub digital de ocio inclusivo en Córdoba. Mapa de espacios y actividades verificadas para personas con diversidad funcional." />
   <title>PlaNex – Ocio Inclusivo en Córdoba</title>
 
-  <!-- Leaflet CSS -->
-  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
-    integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
+  <!-- Leaflet CSS (jsDelivr – sin SRI para evitar bloqueos en prod) -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/leaflet@1.9.4/dist/leaflet.min.css" />
 
   <!-- Google Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -398,7 +397,7 @@
         </div>
       </div>
 
-      <div id="map" role="region" aria-label="Mapa interactivo de espacios accesibles en Córdoba"></div>
+      <div id="map" style="height:520px;width:100%" role="region" aria-label="Mapa interactivo de espacios accesibles en Córdoba"></div>
 
       <div class="container">
         <p class="mapa__note">
@@ -1023,9 +1022,8 @@
     </div>
   </footer>
 
-  <!-- Leaflet JS -->
-  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
-    integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV/XN/WLs=" crossorigin=""></script>
+  <!-- Leaflet JS (jsDelivr – sin SRI para evitar bloqueos en prod) -->
+  <script src="https://cdn.jsdelivr.net/npm/leaflet@1.9.4/dist/leaflet.min.js"></script>
   <script src="js/map.js"></script>
   <script src="js/main.js"></script>
 </body>
