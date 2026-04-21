@@ -63,41 +63,6 @@
   --map-height: 520px;
 }
 
-/* ── Alto contraste ── */
-[data-contrast="high"] {
-  --clr-primary:      #9B6FFF;
-  --clr-accent:       #FFB300;
-  --clr-bg:           #000000;
-  --clr-surface:      #111111;
-  --clr-text:         #FFFFFF;
-  --clr-text-muted:   #CCCCCC;
-  --clr-border:       #888888;
-  --clr-white:        #000000;
-  --clr-primary-light:#001830;
-  --clr-accent-light: #1A0E00;
-  --clr-success-light:#001A0A;
-}
-
-/* ── Escala de grises ── */
-[data-contrast="gray"] {
-  filter: grayscale(100%);
-}
-
-/* ── Tamaños de letra ── */
-[data-fontsize="small"]  { --fs-base: 0.875rem; }
-[data-fontsize="normal"] { --fs-base: 1rem; }
-[data-fontsize="large"]  { --fs-base: 1.125rem; }
-[data-fontsize="xlarge"] { --fs-base: 1.25rem; }
-
-/* ── Interlineado ── */
-[data-lineheight="normal"]  { --lh-base: 1.65; }
-[data-lineheight="relaxed"] { --lh-base: 1.9; }
-[data-lineheight="loose"]   { --lh-base: 2.2; }
-
-/* ── Espaciado letras ── */
-[data-spacing="normal"] { --ls-base: 0em; }
-[data-spacing="wide"]   { --ls-base: 0.05em; }
-
 /* ============================================================
    Reset & Base
    ============================================================ */
@@ -109,7 +74,7 @@
 
 html {
   scroll-behavior: smooth;
-  font-size: var(--fs-base);
+  /* font-size y zoom los aplica el widget vía JS inline style */
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -119,12 +84,21 @@ html {
 
 body {
   font-family: var(--font-body);
-  font-size: var(--fs-base);
+  font-size: 1rem;             /* relativo al font-size del html que controla el widget */
   line-height: var(--lh-base);
-  letter-spacing: var(--ls-base);
   color: var(--clr-text);
   background-color: var(--clr-bg);
   -webkit-font-smoothing: antialiased;
+}
+
+/*
+  El widget aplica filter en el html para contraste/saturación/gris.
+  El panel de accesibilidad necesita isolation para no verse afectado.
+*/
+.a11y-widget {
+  /* isolation: isolate no funciona con filter en el padre,
+     así que neutralizamos el filtro con filter: none en el widget */
+  filter: none !important;
 }
 
 img, svg { display: block; max-width: 100%; }
@@ -249,12 +223,15 @@ button { cursor: pointer; font-family: inherit; }
 
 /* ============================================================
    Widget de accesibilidad
+   filter: none !important asegura que el panel no herede
+   los filtros CSS que aplica el widget al <html>
    ============================================================ */
 .a11y-widget {
   position: fixed;
   bottom: 1.5rem;
   right: 1.5rem;
-  z-index: 1000;
+  z-index: 9999;
+  filter: none !important;    /* neutraliza contrast/grayscale del html */
 }
 
 .a11y-toggle {
@@ -262,102 +239,135 @@ button { cursor: pointer; font-family: inherit; }
   height: 3.25rem;
   border-radius: 50%;
   background: var(--clr-primary);
-  color: var(--clr-white);
-  border: 3px solid var(--clr-white);
+  color: #fff;
+  border: 3px solid #fff;
   display: flex;
   align-items: center;
   justify-content: center;
-  box-shadow: var(--shadow-lg);
+  box-shadow: 0 4px 16px rgba(112,72,232,.45);
   transition: background var(--transition), transform var(--transition);
 }
-.a11y-toggle:hover  { background: var(--clr-primary-dark); transform: scale(1.05); }
+.a11y-toggle:hover  { background: var(--clr-primary-dark); transform: scale(1.07); }
+.a11y-toggle[aria-expanded="true"] { background: var(--clr-primary-dark); }
 .a11y-toggle:focus-visible { outline: 3px solid var(--clr-accent); outline-offset: 3px; }
 
 .a11y-panel {
   position: absolute;
-  bottom: 4rem;
+  bottom: calc(100% + 0.75rem);
   right: 0;
-  width: 300px;
-  background: var(--clr-white);
-  border: 2px solid var(--clr-border);
+  width: 310px;
+  background: #fff;
+  border: 1.5px solid var(--clr-border);
   border-radius: var(--radius-lg);
-  box-shadow: var(--shadow-lg);
+  box-shadow: 0 12px 40px rgba(0,0,0,.18);
   overflow: hidden;
+  /* Animación de entrada */
+  transform-origin: bottom right;
+  animation: a11y-in 180ms ease;
 }
-[data-contrast="high"] .a11y-panel {
-  background: #1a1a1a;
-  border-color: #555;
-  color: #fff;
+@keyframes a11y-in {
+  from { opacity: 0; transform: scale(.95) translateY(6px); }
+  to   { opacity: 1; transform: scale(1)  translateY(0); }
 }
 
 .a11y-panel__header {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 1rem 1.25rem;
+  padding: 0.875rem 1.1rem;
   background: var(--clr-primary);
-  color: var(--clr-white);
+  color: #fff;
 }
-.a11y-panel__title { font-family: var(--font-heading); font-size: 1rem; font-weight: 700; }
+.a11y-panel__title {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-family: var(--font-heading);
+  font-size: 0.95rem;
+  font-weight: 800;
+  color: #fff;
+}
 
 .a11y-close {
   background: none;
   border: none;
-  color: var(--clr-white);
+  color: rgba(255,255,255,.8);
   display: flex;
   align-items: center;
-  padding: 0.25rem;
-  border-radius: 4px;
+  padding: 0.3rem;
+  border-radius: 6px;
+  transition: background var(--transition), color var(--transition);
 }
-.a11y-close:hover { background: rgba(255,255,255,.2); }
-.a11y-close:focus-visible { outline: 2px solid var(--clr-white); }
+.a11y-close:hover { background: rgba(255,255,255,.2); color: #fff; }
+.a11y-close:focus-visible { outline: 2px solid #fff; }
 
-.a11y-panel__body { padding: 1.25rem; display: flex; flex-direction: column; gap: 1.1rem; }
+.a11y-panel__body {
+  padding: 1rem 1.1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.85rem;
+  max-height: 70vh;
+  overflow-y: auto;
+}
 
 .a11y-group { border: none; }
 .a11y-group__label {
-  display: block;
-  font-size: 0.8rem;
-  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+  font-size: 0.72rem;
+  font-weight: 700;
   text-transform: uppercase;
-  letter-spacing: .06em;
+  letter-spacing: .07em;
   color: var(--clr-text-muted);
-  margin-bottom: 0.5rem;
+  margin-bottom: 0.45rem;
 }
-[data-contrast="high"] .a11y-group__label { color: #aaa; }
 
-.a11y-btns { display: flex; gap: 0.4rem; flex-wrap: wrap; }
+.a11y-btns {
+  display: flex;
+  gap: 0.35rem;
+}
+.a11y-btns--wrap { flex-wrap: wrap; }
 
 .a11y-btn {
-  padding: 0.4rem 0.75rem;
-  border-radius: 6px;
+  flex: 1;
+  padding: 0.4rem 0.3rem;
+  border-radius: 8px;
   border: 2px solid var(--clr-border);
-  background: var(--clr-bg);
+  background: var(--clr-surface);
   color: var(--clr-text);
-  font-size: 0.875rem;
+  font-size: 0.82rem;
   font-family: var(--font-body);
-  transition: border-color var(--transition), background var(--transition);
+  font-weight: 500;
+  white-space: nowrap;
+  transition: border-color 150ms, background 150ms, color 150ms;
+  cursor: pointer;
+  text-align: center;
 }
-.a11y-btn:hover { border-color: var(--clr-primary); }
-.a11y-btn--active, .a11y-btn[aria-pressed="true"] {
+.a11y-btn:hover { border-color: var(--clr-primary); background: var(--clr-primary-light); }
+.a11y-btn--active,
+.a11y-btn[aria-pressed="true"] {
   border-color: var(--clr-primary);
-  background: var(--clr-primary-light);
-  color: var(--clr-primary-dark);
-  font-weight: 600;
+  background: var(--clr-primary);
+  color: #fff;
+  font-weight: 700;
 }
 .a11y-btn:focus-visible { outline: 2px solid var(--clr-accent); outline-offset: 2px; }
 
 .a11y-reset {
   width: 100%;
+  margin-top: 0.15rem;
   padding: 0.5rem;
-  border: 2px solid var(--clr-border);
+  border: 1.5px dashed var(--clr-border);
   background: none;
   color: var(--clr-text-muted);
-  font-size: 0.8rem;
-  border-radius: 6px;
-  transition: border-color var(--transition), color var(--transition);
+  font-size: 0.78rem;
+  font-family: var(--font-body);
+  border-radius: 8px;
+  transition: border-color var(--transition), color var(--transition), background var(--transition);
+  cursor: pointer;
 }
-.a11y-reset:hover { border-color: var(--clr-primary); color: var(--clr-primary); }
+.a11y-reset:hover { border-color: var(--clr-primary); color: var(--clr-primary); background: var(--clr-primary-light); }
 .a11y-reset:focus-visible { outline: 2px solid var(--clr-accent); }
 
 /* ============================================================
