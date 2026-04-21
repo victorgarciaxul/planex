@@ -501,7 +501,14 @@ button { cursor: pointer; font-family: inherit; }
   min-height: 85vh;
   display: flex;
   align-items: center;
-  background: linear-gradient(135deg, #5030C0 0%, #7048E8 55%, #8B5CF6 100%);
+  background:
+    linear-gradient(
+      135deg,
+      rgba(80, 48, 192, 0.84) 0%,
+      rgba(112, 72, 232, 0.76) 60%,
+      rgba(139, 92, 246, 0.70) 100%
+    ),
+    url('../assets/hero-bg.png') center / cover no-repeat;
   overflow: hidden;
   padding-block: var(--space-2xl);
 }
