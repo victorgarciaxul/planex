@@ -222,10 +222,38 @@ button { cursor: pointer; font-family: inherit; }
    filter: none !important asegura que el panel no herede
    los filtros CSS que aplica el widget al <html>
    ============================================================ */
+/* ── Widget flotante WhatsApp ── */
+.wa-widget {
+  position: fixed;
+  bottom: calc(1.5rem + 3.25rem + 0.6rem);
+  right: 1.5rem;
+  z-index: 9998;
+  width: 3.25rem;
+  height: 3.25rem;
+  border-radius: 50%;
+  background: #25D366;
+  color: #fff;
+  border: 3px solid #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 14px rgba(37,211,102,.45);
+  transition: transform .2s ease, box-shadow .2s ease;
+  text-decoration: none;
+}
+.wa-widget:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 8px 20px rgba(37,211,102,.55);
+}
+.wa-widget:focus-visible {
+  outline: 3px solid #fff;
+  outline-offset: 3px;
+}
+
 .a11y-widget {
   position: fixed;
-  /* bottom calculado al final del CSS para dejar espacio al botón volver arriba */
-  bottom: calc(1.5rem + 3.25rem + 0.6rem);
+  /* bottom calculado para dejar espacio al widget WA y al botón volver arriba */
+  bottom: calc(1.5rem + (3.25rem + 0.6rem) * 2);
   right: 1.5rem;
   z-index: 9999;
   filter: none !important;
@@ -1346,7 +1374,8 @@ button { cursor: pointer; font-family: inherit; }
 
 @media (max-width: 640px) {
   .back-to-top-wrap { bottom: 1rem; right: 1rem; }
-  .a11y-widget      { bottom: calc(1rem + 3.25rem + 0.6rem); right: 1rem; }
+  .wa-widget        { bottom: calc(1rem + 3.25rem + 0.6rem); right: 1rem; }
+  .a11y-widget      { bottom: calc(1rem + (3.25rem + 0.6rem) * 2); right: 1rem; }
 }
 
 /* ── Leaflet overrides ── */
