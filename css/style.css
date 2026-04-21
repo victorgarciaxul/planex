@@ -95,11 +95,7 @@ body {
   El widget aplica filter en el html para contraste/saturación/gris.
   El panel de accesibilidad necesita isolation para no verse afectado.
 */
-.a11y-widget {
-  /* isolation: isolate no funciona con filter en el padre,
-     así que neutralizamos el filtro con filter: none en el widget */
-  filter: none !important;
-}
+/* filter: none heredado en el selector principal más abajo */
 
 img, svg { display: block; max-width: 100%; }
 a { color: inherit; }
@@ -228,10 +224,11 @@ button { cursor: pointer; font-family: inherit; }
    ============================================================ */
 .a11y-widget {
   position: fixed;
-  bottom: 1.5rem;
+  /* bottom calculado al final del CSS para dejar espacio al botón volver arriba */
+  bottom: calc(1.5rem + 3.25rem + 0.6rem);
   right: 1.5rem;
   z-index: 9999;
-  filter: none !important;    /* neutraliza contrast/grayscale del html */
+  filter: none !important;
 }
 
 .a11y-toggle {
@@ -1246,6 +1243,7 @@ button { cursor: pointer; font-family: inherit; }
 /* Tablet */
 @media (max-width: 900px) {
   .mision__grid    { grid-template-columns: 1fr; }
+  .mision__cards   { grid-template-columns: 1fr 1fr; } /* mantiene 2 col en tablet */
   .niveles-grid    { grid-template-columns: 1fr; }
   .contacto__grid  { grid-template-columns: 1fr; }
   .footer__grid    { grid-template-columns: 1fr 1fr; }
@@ -1282,6 +1280,10 @@ button { cursor: pointer; font-family: inherit; }
   .btn { width: 100%; justify-content: center; }
   .btn--download { width: auto; }
 
+  /* ── Fix misión: 1 columna en móvil ── */
+  .mision__cards  { grid-template-columns: 1fr; }
+  .mision__card   { flex-direction: row; align-items: center; }
+
   .galeria__grid  { grid-template-columns: 1fr 1fr; }
   .iconos-grid    { grid-template-columns: 1fr 1fr; }
   .stats          { grid-template-columns: repeat(2, 1fr); }
@@ -1290,7 +1292,6 @@ button { cursor: pointer; font-family: inherit; }
   .footer__bottom { flex-direction: column; text-align: center; }
 
   .a11y-panel { width: calc(100vw - 2rem); right: 0; }
-  .a11y-widget { bottom: 1rem; right: 1rem; }
 
   .form-group--reporte { display: flex !important; }
 }
@@ -1298,6 +1299,60 @@ button { cursor: pointer; font-family: inherit; }
 @media (max-width: 400px) {
   .galeria__grid { grid-template-columns: 1fr; }
   .iconos-grid   { grid-template-columns: 1fr; }
+}
+
+/* ============================================================
+   Botón volver arriba
+   ============================================================ */
+.back-to-top {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 3.25rem;
+  height: 3.25rem;
+  border-radius: 50%;
+  background: var(--clr-white);
+  color: var(--clr-primary);
+  border: 2px solid var(--clr-border);
+  box-shadow: var(--shadow-md);
+  cursor: pointer;
+  transition: background var(--transition), color var(--transition),
+              border-color var(--transition), transform var(--transition),
+              opacity var(--transition);
+  /* Oculto hasta que el usuario scrollea */
+  opacity: 0;
+  pointer-events: none;
+  transform: translateY(8px);
+}
+.back-to-top.visible {
+  opacity: 1;
+  pointer-events: auto;
+  transform: translateY(0);
+}
+.back-to-top:hover {
+  background: var(--clr-primary);
+  color: #fff;
+  border-color: var(--clr-primary);
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-lg);
+}
+.back-to-top:focus-visible {
+  outline: 3px solid var(--clr-accent);
+  outline-offset: 3px;
+}
+
+/* Back-to-top: en la esquina inferior derecha */
+.back-to-top-wrap {
+  position: fixed;
+  bottom: 1.5rem;
+  right: 1.5rem;
+  z-index: 9998;
+  filter: none !important;
+}
+
+@media (max-width: 640px) {
+  .back-to-top-wrap { bottom: 1rem; right: 1rem; }
+  .a11y-widget      { bottom: calc(1rem + 3.25rem + 0.6rem); right: 1rem; }
 }
 
 /* ── Leaflet overrides ── */

@@ -286,6 +286,28 @@ function initFadeAnimations() {
 }
 
 /* ============================================================
+   Botón volver arriba
+   ============================================================ */
+function initBackToTop() {
+  const btn = $('#backToTop');
+  if (!btn) return;
+
+  /* Mostrar cuando el usuario ha scrolleado más de 400px */
+  const THRESHOLD = 400;
+
+  function toggleBtn() {
+    btn.classList.toggle('visible', window.scrollY > THRESHOLD);
+  }
+
+  window.addEventListener('scroll', toggleBtn, { passive: true });
+  toggleBtn(); /* estado inicial */
+
+  btn.addEventListener('click', () => {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  });
+}
+
+/* ============================================================
    Init
    ============================================================ */
 document.addEventListener('DOMContentLoaded', () => {
@@ -294,4 +316,5 @@ document.addEventListener('DOMContentLoaded', () => {
   initScrollEffects();
   initContactForm();
   initFadeAnimations();
+  initBackToTop();
 });
