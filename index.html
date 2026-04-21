@@ -1,0 +1,1011 @@
+<!DOCTYPE html>
+<html lang="es" data-contrast="normal">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description"
+    content="PlaNex – Hub digital de ocio inclusivo en Córdoba. Mapa de espacios y actividades verificadas para personas con diversidad funcional." />
+  <title>PlaNex – Ocio Inclusivo en Córdoba</title>
+
+  <!-- Leaflet CSS -->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+    integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;500;600;700;800;900&family=Inter:ital,wght@0,400;0,500;0,600;1,400&display=swap"
+    rel="stylesheet" />
+
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+
+<body>
+
+  <!-- ===== SALTAR AL CONTENIDO ===== -->
+  <a class="skip-link" href="#main">Saltar al contenido principal</a>
+
+  <!-- ===== WIDGET DE ACCESIBILIDAD ===== -->
+  <div class="a11y-widget" role="complementary" aria-label="Panel de ajustes de accesibilidad">
+    <button class="a11y-toggle" id="a11yToggle" aria-expanded="false" aria-controls="a11yPanel"
+      title="Ajustes de accesibilidad">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+        stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" width="24" height="24">
+        <circle cx="12" cy="12" r="3" />
+        <path d="M3 12h1m8-9v1m8 8h1m-9 8v1M5.6 5.6l.7.7m11.4-.7-.7.7m-11.4 11.4.7-.7m11.4.7-.7-.7" />
+        <circle cx="12" cy="12" r="7" stroke-dasharray="3 2" />
+      </svg>
+      <span class="sr-only">Ajustes de accesibilidad</span>
+    </button>
+
+    <div class="a11y-panel" id="a11yPanel" hidden>
+      <div class="a11y-panel__header">
+        <h2 class="a11y-panel__title">Ajustes de accesibilidad</h2>
+        <button class="a11y-close" id="a11yClose" aria-label="Cerrar panel de accesibilidad">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+            aria-hidden="true" width="20" height="20">
+            <line x1="18" y1="6" x2="6" y2="18" />
+            <line x1="6" y1="6" x2="18" y2="18" />
+          </svg>
+        </button>
+      </div>
+
+      <div class="a11y-panel__body">
+
+        <!-- Tamaño de letra -->
+        <fieldset class="a11y-group">
+          <legend class="a11y-group__label">Tamaño de letra</legend>
+          <div class="a11y-btns" role="group">
+            <button class="a11y-btn" data-action="font" data-value="small"
+              aria-pressed="false">A<small>-</small></button>
+            <button class="a11y-btn a11y-btn--active" data-action="font" data-value="normal"
+              aria-pressed="true">A</button>
+            <button class="a11y-btn" data-action="font" data-value="large" aria-pressed="false">A<sup>+</sup></button>
+            <button class="a11y-btn" data-action="font" data-value="xlarge"
+              aria-pressed="false"><strong>A+</strong></button>
+          </div>
+        </fieldset>
+
+        <!-- Interlineado -->
+        <fieldset class="a11y-group">
+          <legend class="a11y-group__label">Interlineado</legend>
+          <div class="a11y-btns" role="group">
+            <button class="a11y-btn a11y-btn--active" data-action="line" data-value="normal"
+              aria-pressed="true">Normal</button>
+            <button class="a11y-btn" data-action="line" data-value="relaxed" aria-pressed="false">Amplio</button>
+            <button class="a11y-btn" data-action="line" data-value="loose" aria-pressed="false">Muy amplio</button>
+          </div>
+        </fieldset>
+
+        <!-- Contraste -->
+        <fieldset class="a11y-group">
+          <legend class="a11y-group__label">Contraste</legend>
+          <div class="a11y-btns" role="group">
+            <button class="a11y-btn a11y-btn--active" data-action="contrast" data-value="normal"
+              aria-pressed="true">Normal</button>
+            <button class="a11y-btn" data-action="contrast" data-value="high" aria-pressed="false">Alto
+              contraste</button>
+            <button class="a11y-btn" data-action="contrast" data-value="gray" aria-pressed="false">Escala de
+              grises</button>
+          </div>
+        </fieldset>
+
+        <!-- Espaciado de letras -->
+        <fieldset class="a11y-group">
+          <legend class="a11y-group__label">Espaciado entre letras</legend>
+          <div class="a11y-btns" role="group">
+            <button class="a11y-btn a11y-btn--active" data-action="spacing" data-value="normal"
+              aria-pressed="true">Normal</button>
+            <button class="a11y-btn" data-action="spacing" data-value="wide" aria-pressed="false">Amplio</button>
+          </div>
+        </fieldset>
+
+        <button class="a11y-reset" id="a11yReset">Restablecer por defecto</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== CABECERA / NAV ===== -->
+  <header class="site-header" id="top" role="banner">
+    <nav class="nav container" aria-label="Navegación principal">
+      <a href="#top" class="nav__logo" aria-label="PlaNex – Inicio">
+        <svg class="logo-icon" viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg" width="34" height="34" aria-hidden="true">
+          <rect width="36" height="36" rx="10" fill="#7048E8"/>
+          <path d="M10 8h9c3.9 0 7 3.1 7 7s-3.1 7-7 7h-5v6H10V8z" fill="white"/>
+          <circle cx="23" cy="11" r="3.5" fill="#7048E8"/>
+        </svg>
+        <span class="logo-text"><span class="logo-pla">Pla</span><span class="logo-nex">Nex</span></span>
+      </a>
+
+      <button class="nav__hamburger" id="navToggle" aria-expanded="false" aria-controls="navMenu"
+        aria-label="Abrir menú de navegación">
+        <span></span><span></span><span></span>
+      </button>
+
+      <ul class="nav__menu" id="navMenu" role="list">
+        <li><a class="nav__link" href="#mision">Misión</a></li>
+        <li><a class="nav__link" href="#quienes">Quiénes somos</a></li>
+        <li><a class="nav__link" href="#mapa">Mapa</a></li>
+        <li><a class="nav__link" href="#protocolo">Protocolo</a></li>
+        <li><a class="nav__link" href="#comunidad">Comunidad</a></li>
+        <li><a class="nav__link" href="#descargas">Descargas</a></li>
+        <li><a class="nav__link nav__link--cta" href="#contacto">Contacto</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <!-- ===== CONTENIDO PRINCIPAL ===== -->
+  <main id="main">
+
+    <!-- ── HERO ── -->
+    <section class="hero" aria-labelledby="hero-heading">
+      <div class="hero__bg" aria-hidden="true"></div>
+      <div class="hero__content container">
+        <p class="hero__eyebrow">Web para el Ocio inclusivo en Córdoba</p>
+        <h1 class="hero__heading" id="hero-heading">
+          Descubre planes<br />que encajan contigo,<br /><span class="text-accent">sin barreras</span>
+        </h1>
+        <p class="hero__desc">
+          PlaNex centraliza, valida y difunde la oferta de actividades accesibles para personas con diversidad funcional y sus familias en Córdoba.
+        </p>
+        <div class="hero__actions">
+          <a class="btn btn--primary" href="#mapa">Ver el mapa</a>
+          <a class="btn btn--outline" href="#protocolo">Conocer el protocolo</a>
+        </div>
+      </div>
+      <div class="hero__wave" aria-hidden="true">
+        <svg viewBox="0 0 1440 80" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none">
+          <path d="M0,40 C360,80 1080,0 1440,40 L1440,80 L0,80 Z" fill="var(--clr-bg)" />
+        </svg>
+      </div>
+    </section>
+
+    <!-- ── MISIÓN ── -->
+    <section class="section" id="mision" aria-labelledby="mision-heading">
+      <div class="container">
+        <div class="section__intro">
+          <p class="section__eyebrow">¿Qué es PlaNex?</p>
+          <h2 class="section__heading" id="mision-heading">Nuestra misión</h2>
+        </div>
+        <div class="mision__grid">
+          <div class="mision__text">
+            <p class="lead">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut
+              labore et dolore magna aliqua.</p>
+            <p>Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
+              consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla
+              pariatur.</p>
+            <p>Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est
+              laborum. Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium.
+            </p>
+          </div>
+          <div class="mision__cards" aria-label="Categorías de ocio PlaNex">
+            <div class="mision__card cat-natural">
+              <div class="mision__card-icon" aria-hidden="true">
+                <svg viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg" width="40" height="40">
+                  <path d="M20 6c0 0-12 8-12 18a12 12 0 0024 0C32 14 20 6 20 6z" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/>
+                  <path d="M20 24v8M14 20c2-2 4-3 6-2" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                </svg>
+              </div>
+              <h3>Natural</h3>
+              <p>Parques, rutas y actividades al aire libre adaptadas.</p>
+            </div>
+            <div class="mision__card cat-recreativo">
+              <div class="mision__card-icon" aria-hidden="true">
+                <svg viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg" width="40" height="40">
+                  <path d="M20 6l3 9h9l-7 5 3 9-8-6-8 6 3-9-7-5h9z" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/>
+                </svg>
+              </div>
+              <h3>Recreativo</h3>
+              <p>Juegos, entretenimiento y experiencias de ocio inclusivo.</p>
+            </div>
+            <div class="mision__card cat-cultural">
+              <div class="mision__card-icon" aria-hidden="true">
+                <svg viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg" width="40" height="40">
+                  <rect x="6" y="12" width="28" height="20" rx="2" stroke="currentColor" stroke-width="2"/>
+                  <path d="M13 12V9a7 7 0 0114 0v3" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                  <path d="M14 22h12M14 27h8" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                </svg>
+              </div>
+              <h3>Cultural</h3>
+              <p>Museos, teatros y espacios culturales accesibles verificados.</p>
+            </div>
+            <div class="mision__card cat-deportivo">
+              <div class="mision__card-icon" aria-hidden="true">
+                <svg viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg" width="40" height="40">
+                  <circle cx="20" cy="20" r="14" stroke="currentColor" stroke-width="2"/>
+                  <path d="M20 6c0 0 5 6 5 14s-5 14-5 14M20 6c0 0-5 6-5 14s5 14 5 14M6 20h28" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                </svg>
+              </div>
+              <h3>Deportivo</h3>
+              <p>Instalaciones deportivas y actividades físicas adaptadas.</p>
+            </div>
+            <div class="mision__card cat-formativo">
+              <div class="mision__card-icon" aria-hidden="true">
+                <svg viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg" width="40" height="40">
+                  <path d="M20 8L6 16l14 8 14-8-14-8z" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/>
+                  <path d="M6 24l14 8 14-8M34 16v10" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+              </div>
+              <h3>Formativo</h3>
+              <p>Talleres, cursos y formación con metodologías inclusivas.</p>
+            </div>
+            <div class="mision__card cat-social">
+              <div class="mision__card-icon" aria-hidden="true">
+                <svg viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg" width="40" height="40">
+                  <circle cx="14" cy="14" r="6" stroke="currentColor" stroke-width="2"/>
+                  <circle cx="26" cy="14" r="6" stroke="currentColor" stroke-width="2"/>
+                  <path d="M4 34c0-5.5 4.5-10 10-10h12c5.5 0 10 4.5 10 10" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                </svg>
+              </div>
+              <h3>Social</h3>
+              <p>Eventos, asociaciones y espacios de encuentro comunitario.</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Stats -->
+        <ul class="stats" aria-label="Datos del proyecto" role="list">
+          <li class="stats__item">
+            <span class="stats__num" aria-label="Más de 10">10+</span>
+            <span class="stats__label">Espacios verificados</span>
+          </li>
+          <li class="stats__item">
+            <span class="stats__num">8</span>
+            <span class="stats__label">Iconos de necesidades</span>
+          </li>
+          <li class="stats__item">
+            <span class="stats__num">2</span>
+            <span class="stats__label">Niveles de certificación</span>
+          </li>
+          <li class="stats__item">
+            <span class="stats__num">1</span>
+            <span class="stats__label">Comunidad activa</span>
+          </li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- ── QUIÉNES SOMOS ── -->
+    <section class="section section--alt" id="quienes" aria-labelledby="quienes-heading">
+      <div class="container">
+        <div class="section__intro">
+          <p class="section__eyebrow">El equipo</p>
+          <h2 class="section__heading" id="quienes-heading">Quiénes somos</h2>
+          <p class="section__sub">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor
+            incididunt ut labore et dolore magna aliqua.</p>
+        </div>
+
+        <!-- Grupo Nexo -->
+        <div class="quienes__block">
+          <div class="quienes__badge badge--primary" aria-label="Grupo Nexo">Grupo Nexo</div>
+          <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut enim ad minim veniam, quis nostrud exercitation
+            ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit. Grupo de
+            estudiantes de comunicación de la <strong>Universidad Loyola</strong>, ganadores de la edición 2025 de
+            <strong>Líderes 2030</strong> de Fundación Kutxabank y Córdoba Social Lab.</p>
+          <div class="team-grid" role="list" aria-label="Miembros del equipo">
+            <article class="team-card" role="listitem">
+              <div class="team-card__avatar" aria-hidden="true">
+                <svg viewBox="0 0 80 80" xmlns="http://www.w3.org/2000/svg" width="80" height="80">
+                  <circle cx="40" cy="40" r="40" fill="var(--clr-primary-light)" />
+                  <circle cx="40" cy="32" r="14" fill="var(--clr-primary)" opacity=".3" />
+                  <ellipse cx="40" cy="68" rx="22" ry="16" fill="var(--clr-primary)" opacity=".3" />
+                </svg>
+              </div>
+              <h3 class="team-card__name">Nombre Apellido</h3>
+              <p class="team-card__role">Lorem ipsum</p>
+            </article>
+            <article class="team-card" role="listitem">
+              <div class="team-card__avatar" aria-hidden="true">
+                <svg viewBox="0 0 80 80" xmlns="http://www.w3.org/2000/svg" width="80" height="80">
+                  <circle cx="40" cy="40" r="40" fill="var(--clr-primary-light)" />
+                  <circle cx="40" cy="32" r="14" fill="var(--clr-primary)" opacity=".3" />
+                  <ellipse cx="40" cy="68" rx="22" ry="16" fill="var(--clr-primary)" opacity=".3" />
+                </svg>
+              </div>
+              <h3 class="team-card__name">Nombre Apellido</h3>
+              <p class="team-card__role">Lorem ipsum</p>
+            </article>
+            <article class="team-card" role="listitem">
+              <div class="team-card__avatar" aria-hidden="true">
+                <svg viewBox="0 0 80 80" xmlns="http://www.w3.org/2000/svg" width="80" height="80">
+                  <circle cx="40" cy="40" r="40" fill="var(--clr-primary-light)" />
+                  <circle cx="40" cy="32" r="14" fill="var(--clr-primary)" opacity=".3" />
+                  <ellipse cx="40" cy="68" rx="22" ry="16" fill="var(--clr-primary)" opacity=".3" />
+                </svg>
+              </div>
+              <h3 class="team-card__name">Nombre Apellido</h3>
+              <p class="team-card__role">Lorem ipsum</p>
+            </article>
+            <article class="team-card" role="listitem">
+              <div class="team-card__avatar" aria-hidden="true">
+                <svg viewBox="0 0 80 80" xmlns="http://www.w3.org/2000/svg" width="80" height="80">
+                  <circle cx="40" cy="40" r="40" fill="var(--clr-primary-light)" />
+                  <circle cx="40" cy="32" r="14" fill="var(--clr-primary)" opacity=".3" />
+                  <ellipse cx="40" cy="68" rx="22" ry="16" fill="var(--clr-primary)" opacity=".3" />
+                </svg>
+              </div>
+              <h3 class="team-card__name">Nombre Apellido</h3>
+              <p class="team-card__role">Lorem ipsum</p>
+            </article>
+          </div>
+        </div>
+
+        <!-- Fundación XUL -->
+        <div class="quienes__block quienes__block--xul">
+          <div class="quienes__badge badge--accent" aria-label="Alianza con Fundación XUL">Alianza operativa</div>
+          <div class="xul-grid">
+            <div class="xul-text">
+              <h3>Fundación XUL</h3>
+              <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et
+                dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip
+                ex ea commodo consequat.</p>
+              <p>Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.
+                Excepteur sint occaecat cupidatat non proident.</p>
+            </div>
+            <div class="xul-logo-placeholder" aria-label="Logo Fundación XUL (próximamente)">
+              <span><img src="assets/logos/logo-xul.png" alt=""></span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ── MAPA ── -->
+    <section class="section" id="mapa" aria-labelledby="mapa-heading">
+      <div class="container">
+        <div class="section__intro">
+          <p class="section__eyebrow">Espacios verificados</p>
+          <h2 class="section__heading" id="mapa-heading">Mapa de actividades</h2>
+          <p class="section__sub">Lugares y actividades en Córdoba que han superado el protocolo PlaNex. Al final de
+            septiembre estimamos al menos 10 ubicaciones verificadas.</p>
+        </div>
+
+        <!-- Filtros del mapa -->
+        <div class="mapa__filters" role="group" aria-label="Filtrar por nivel de certificación">
+          <button class="filter-btn filter-btn--active" data-filter="all" aria-pressed="true">Todos</button>
+          <button class="filter-btn" data-filter="base" aria-pressed="false">
+            <span class="badge-dot badge-dot--base" aria-hidden="true"></span>
+            Nivel Base
+          </button>
+          <button class="filter-btn" data-filter="sello" aria-pressed="false">
+            <span class="badge-dot badge-dot--sello" aria-hidden="true"></span>
+            Sello PlaNex
+          </button>
+        </div>
+      </div>
+
+      <div id="map" role="region" aria-label="Mapa interactivo de espacios accesibles en Córdoba"></div>
+
+      <div class="container">
+        <p class="mapa__note">
+          <svg viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg" width="16" height="16"
+            aria-hidden="true">
+            <circle cx="8" cy="8" r="7" stroke="currentColor" stroke-width="1.5" />
+            <path d="M8 7v5M8 5v.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" />
+          </svg>
+          ¿Detectas que un espacio no cumple lo prometido?
+          <a href="#contacto" class="link">Repórtalo desde el formulario de contacto</a>.
+        </p>
+      </div>
+    </section>
+
+    <!-- ── PROTOCOLO E ICONOGRAFÍA ── -->
+    <section class="section section--alt" id="protocolo" aria-labelledby="protocolo-heading">
+      <div class="container">
+        <div class="section__intro">
+          <p class="section__eyebrow">Sistema de certificación</p>
+          <h2 class="section__heading" id="protocolo-heading">Protocolo e iconografía</h2>
+          <p class="section__sub">PlaNex establece dos niveles de exigencia para garantizar experiencias realmente
+            accesibles.</p>
+        </div>
+
+        <!-- Dos niveles -->
+        <div class="niveles-grid">
+          <div class="nivel-card nivel-card--base">
+            <div class="nivel-card__header">
+              <div class="nivel-badge nivel-badge--base" aria-label="Nivel Base">
+                <svg viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg" width="32" height="32"
+                  aria-hidden="true">
+                  <circle cx="16" cy="16" r="14" stroke="currentColor" stroke-width="2" />
+                  <path d="M10 16l4 4 8-8" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                    stroke-linejoin="round" />
+                </svg>
+              </div>
+              <h3 class="nivel-card__title">Nivel Base</h3>
+            </div>
+            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et
+              dolore magna aliqua ut enim.</p>
+            <ul class="nivel-list" role="list">
+              <li>Lorem ipsum dolor sit amet consectetur</li>
+              <li>Adipiscing elit sed do eiusmod tempor</li>
+              <li>Incididunt ut labore et dolore magna</li>
+              <li>Ut enim ad minim veniam quis nostrud</li>
+              <li>Exercitation ullamco laboris nisi ut</li>
+            </ul>
+          </div>
+
+          <div class="nivel-card nivel-card--sello">
+            <div class="nivel-card__header">
+              <div class="nivel-badge nivel-badge--sello" aria-label="Sello PlaNex">
+                <svg viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg" width="32" height="32"
+                  aria-hidden="true">
+                  <path
+                    d="M16 2l3.09 6.26L26 9.27l-5 4.87 1.18 6.88L16 17.77l-6.18 3.25L11 14.14 6 9.27l6.91-1.01L16 2z"
+                    stroke="currentColor" stroke-width="2" stroke-linejoin="round" />
+                </svg>
+              </div>
+              <h3 class="nivel-card__title">Sello PlaNex</h3>
+            </div>
+            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Excepteur sint occaecat cupidatat non proident
+              deserunt mollit anim.</p>
+            <ul class="nivel-list" role="list">
+              <li>Todo lo del Nivel Base, más...</li>
+              <li>Duis aute irure dolor in reprehenderit</li>
+              <li>In voluptate velit esse cillum dolore</li>
+              <li>Eu fugiat nulla pariatur excepteur sint</li>
+              <li>Occaecat cupidatat non proident sunt</li>
+              <li>In culpa qui officia deserunt mollit</li>
+            </ul>
+          </div>
+        </div>
+
+        <!-- 8 Iconos de necesidades específicas -->
+        <div class="iconos-section">
+          <h3 class="iconos-section__title">Los 8 iconos de necesidades específicas</h3>
+          <p class="iconos-section__desc">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cada icono señala qué
+            tipo de adaptación está disponible en el espacio.</p>
+          <ul class="iconos-grid" role="list" aria-label="Iconos de necesidades específicas PlaNex">
+
+            <li class="icono-card" role="listitem">
+              <div class="icono-card__icon" aria-hidden="true">
+                <svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg" width="48" height="48">
+                  <circle cx="24" cy="24" r="20" fill="var(--clr-primary-light)" />
+                  <path d="M18 20c0-3.3 2.7-6 6-6s6 2.7 6 6-2.7 6-6 6" stroke="var(--clr-primary)" stroke-width="2"
+                    stroke-linecap="round" />
+                  <path d="M15 17c0-4.97 4.03-9 9-9s9 4.03 9 9" stroke="var(--clr-primary)" stroke-width="2"
+                    stroke-linecap="round" opacity=".5" />
+                  <path d="M24 30v4M21 34h6" stroke="var(--clr-primary)" stroke-width="2" stroke-linecap="round" />
+                </svg>
+              </div>
+              <h4 class="icono-card__name">Sonidos</h4>
+              <p class="icono-card__desc">Ambiente controlado, sin ruido excesivo ni estímulos sonoros bruscos.</p>
+            </li>
+
+            <li class="icono-card" role="listitem">
+              <div class="icono-card__icon" aria-hidden="true">
+                <svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg" width="48" height="48">
+                  <circle cx="24" cy="24" r="20" fill="var(--clr-accent-light)" />
+                  <circle cx="24" cy="22" r="6" stroke="var(--clr-accent)" stroke-width="2" />
+                  <path
+                    d="M24 10v2M24 32v2M12 22h2M34 22h2M15.5 13.5l1.4 1.4M31.1 29.1l1.4 1.4M15.5 30.5l1.4-1.4M31.1 14.9l1.4-1.4"
+                    stroke="var(--clr-accent)" stroke-width="2" stroke-linecap="round" />
+                </svg>
+              </div>
+              <h4 class="icono-card__name">Iluminación</h4>
+              <p class="icono-card__desc">Iluminación adecuada, sin parpadeos ni contrastes extremos de luz.</p>
+            </li>
+
+            <li class="icono-card" role="listitem">
+              <div class="icono-card__icon" aria-hidden="true">
+                <svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg" width="48" height="48">
+                  <circle cx="24" cy="24" r="20" fill="var(--clr-success-light)" />
+                  <path d="M16 28c0 0 2-6 8-6s8 6 8 6" stroke="var(--clr-success)" stroke-width="2"
+                    stroke-linecap="round" />
+                  <path d="M20 22c0-1.1.9-2 2-2h4c1.1 0 2 .9 2 2v2h-8v-2z" fill="var(--clr-success)" opacity=".4" />
+                  <circle cx="20" cy="19" r="2" fill="var(--clr-success)" />
+                  <circle cx="28" cy="19" r="2" fill="var(--clr-success)" />
+                </svg>
+              </div>
+              <h4 class="icono-card__name">LSE</h4>
+              <p class="icono-card__desc">Personal formado en Lengua de Signos Española o servicio de interpretación.
+              </p>
+            </li>
+
+            <li class="icono-card" role="listitem">
+              <div class="icono-card__icon" aria-hidden="true">
+                <svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg" width="48" height="48">
+                  <circle cx="24" cy="24" r="20" fill="var(--clr-primary-light)" />
+                  <circle cx="24" cy="15" r="4" stroke="var(--clr-primary)" stroke-width="2" />
+                  <path d="M16 36c0-4.4 3.6-8 8-8s8 3.6 8 8" stroke="var(--clr-primary)" stroke-width="2"
+                    stroke-linecap="round" />
+                  <circle cx="32" cy="32" r="5" fill="var(--clr-primary-light)" stroke="var(--clr-primary)"
+                    stroke-width="2" />
+                  <path d="M30 32h4M32 30v4" stroke="var(--clr-primary)" stroke-width="1.5" stroke-linecap="round" />
+                </svg>
+              </div>
+              <h4 class="icono-card__name">Movilidad</h4>
+              <p class="icono-card__desc">Acceso sin barreras arquitectónicas, rampa, ascensor y espacios amplios.</p>
+            </li>
+
+            <li class="icono-card" role="listitem">
+              <div class="icono-card__icon" aria-hidden="true">
+                <svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg" width="48" height="48">
+                  <circle cx="24" cy="24" r="20" fill="var(--clr-accent-light)" />
+                  <ellipse cx="24" cy="24" rx="10" ry="6" stroke="var(--clr-accent)" stroke-width="2" />
+                  <circle cx="24" cy="24" r="3" fill="var(--clr-accent)" />
+                  <path d="M14 24c0 0 4-8 10-8s10 8 10 8" stroke="var(--clr-accent)" stroke-width="1.5"
+                    stroke-linecap="round" opacity=".5" />
+                </svg>
+              </div>
+              <h4 class="icono-card__name">Visual</h4>
+              <p class="icono-card__desc">Señalética en braille, contraste visual y guía táctil disponibles.</p>
+            </li>
+
+            <li class="icono-card" role="listitem">
+              <div class="icono-card__icon" aria-hidden="true">
+                <svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg" width="48" height="48">
+                  <circle cx="24" cy="24" r="20" fill="var(--clr-success-light)" />
+                  <circle cx="24" cy="18" r="7" stroke="var(--clr-success)" stroke-width="2" />
+                  <path d="M20 17c1-2 4-2 5 0M22 22c0 2 4 2 4 0" stroke="var(--clr-success)" stroke-width="1.5"
+                    stroke-linecap="round" />
+                  <path d="M18 30c0-1 1-2 2-2h8c1 0 2 1 2 2v4" stroke="var(--clr-success)" stroke-width="2"
+                    stroke-linecap="round" />
+                </svg>
+              </div>
+              <h4 class="icono-card__name">Cognitiva</h4>
+              <p class="icono-card__desc">Información en lectura fácil, pictogramas y personal de apoyo disponibles.</p>
+            </li>
+
+            <li class="icono-card" role="listitem">
+              <div class="icono-card__icon" aria-hidden="true">
+                <svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg" width="48" height="48">
+                  <circle cx="24" cy="24" r="20" fill="var(--clr-primary-light)" />
+                  <path d="M24 14c-5.5 0-10 4.5-10 10s4.5 10 10 10 10-4.5 10-10" stroke="var(--clr-primary)"
+                    stroke-width="2" stroke-linecap="round" />
+                  <path d="M28 14l6-2-2 6" stroke="var(--clr-primary)" stroke-width="2" stroke-linecap="round"
+                    stroke-linejoin="round" />
+                  <path d="M24 20v4l3 3" stroke="var(--clr-primary)" stroke-width="2" stroke-linecap="round" />
+                </svg>
+              </div>
+              <h4 class="icono-card__name">Sensorial</h4>
+              <p class="icono-card__desc">Espacio con bajo nivel de estimulación sensorial o zona de descanso
+                habilitada.</p>
+            </li>
+
+            <li class="icono-card" role="listitem">
+              <div class="icono-card__icon" aria-hidden="true">
+                <svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg" width="48" height="48">
+                  <circle cx="24" cy="24" r="20" fill="var(--clr-accent-light)" />
+                  <path
+                    d="M14 20c0-3.3 2.7-6 6-6h8c3.3 0 6 2.7 6 6v4c0 3.3-2.7 6-6 6h-2l-4 4v-4h-2c-3.3 0-6-2.7-6-6v-4z"
+                    stroke="var(--clr-accent)" stroke-width="2" stroke-linejoin="round" />
+                  <path d="M20 22h8M20 26h5" stroke="var(--clr-accent)" stroke-width="2" stroke-linecap="round" />
+                </svg>
+              </div>
+              <h4 class="icono-card__name">Comunicación</h4>
+              <p class="icono-card__desc">Sistemas aumentativos y alternativos de comunicación (SAAC) disponibles.</p>
+            </li>
+
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- ── COMUNIDAD PLANEX ── -->
+    <section class="section comunidad" id="comunidad" aria-labelledby="comunidad-heading">
+      <div class="container">
+        <div class="section__intro">
+          <p class="section__eyebrow">Únete</p>
+          <h2 class="section__heading" id="comunidad-heading">Comunidad PlaNex</h2>
+          <p class="section__sub">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Forma parte de nuestra
+            comunidad y mantente al día de todos los espacios y actividades verificadas.</p>
+        </div>
+        <div class="comunidad__grid">
+          <a class="comunidad__card comunidad__card--whatsapp" href="#"
+            aria-label="Unirse a la comunidad de WhatsApp de PlaNex" rel="noopener noreferrer">
+            <div class="comunidad__icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" width="48" height="48" fill="currentColor">
+                <path
+                  d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z" />
+              </svg>
+            </div>
+            <div class="comunidad__text">
+              <h3>WhatsApp</h3>
+              <p>Únete a nuestra comunidad y recibe novedades al instante</p>
+            </div>
+            <span class="comunidad__arrow" aria-hidden="true">→</span>
+          </a>
+
+          <a class="comunidad__card comunidad__card--instagram" href="#" aria-label="Seguir a PlaNex en Instagram"
+            rel="noopener noreferrer">
+            <div class="comunidad__icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" width="48" height="48" fill="currentColor">
+                <path
+                  d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z" />
+              </svg>
+            </div>
+            <div class="comunidad__text">
+              <h3>Instagram</h3>
+              <p>Síguenos para ver todas las novedades y espacios verificados</p>
+            </div>
+            <span class="comunidad__arrow" aria-hidden="true">→</span>
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <!-- ── GALERÍA ── -->
+    <section class="section section--alt" id="galeria" aria-labelledby="galeria-heading">
+      <div class="container">
+        <div class="section__intro">
+          <p class="section__eyebrow">En acción</p>
+          <h2 class="section__heading" id="galeria-heading">Galería de imágenes</h2>
+          <p class="section__sub">Fotografías reales de las visitas de mapeo y del equipo en acción. Próximamente iremos
+            incorporando más imágenes.</p>
+        </div>
+        <div class="galeria__grid" role="list" aria-label="Galería de imágenes del proyecto PlaNex">
+          <div class="galeria__item" role="listitem">
+            <div class="galeria__placeholder" aria-label="Imagen próximamente">
+              <svg viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg" width="48" height="48"
+                aria-hidden="true">
+                <rect x="8" y="12" width="48" height="36" rx="4" stroke="currentColor" stroke-width="2" />
+                <circle cx="22" cy="26" r="6" stroke="currentColor" stroke-width="2" />
+                <path d="M8 38l14-10 10 8 8-6 14 14" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                  stroke-linejoin="round" />
+              </svg>
+              <span>Próximamente</span>
+            </div>
+          </div>
+          <div class="galeria__item" role="listitem">
+            <div class="galeria__placeholder" aria-label="Imagen próximamente">
+              <svg viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg" width="48" height="48"
+                aria-hidden="true">
+                <rect x="8" y="12" width="48" height="36" rx="4" stroke="currentColor" stroke-width="2" />
+                <circle cx="22" cy="26" r="6" stroke="currentColor" stroke-width="2" />
+                <path d="M8 38l14-10 10 8 8-6 14 14" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                  stroke-linejoin="round" />
+              </svg>
+              <span>Próximamente</span>
+            </div>
+          </div>
+          <div class="galeria__item" role="listitem">
+            <div class="galeria__placeholder" aria-label="Imagen próximamente">
+              <svg viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg" width="48" height="48"
+                aria-hidden="true">
+                <rect x="8" y="12" width="48" height="36" rx="4" stroke="currentColor" stroke-width="2" />
+                <circle cx="22" cy="26" r="6" stroke="currentColor" stroke-width="2" />
+                <path d="M8 38l14-10 10 8 8-6 14 14" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                  stroke-linejoin="round" />
+              </svg>
+              <span>Próximamente</span>
+            </div>
+          </div>
+          <div class="galeria__item" role="listitem">
+            <div class="galeria__placeholder" aria-label="Imagen próximamente">
+              <svg viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg" width="48" height="48"
+                aria-hidden="true">
+                <rect x="8" y="12" width="48" height="36" rx="4" stroke="currentColor" stroke-width="2" />
+                <circle cx="22" cy="26" r="6" stroke="currentColor" stroke-width="2" />
+                <path d="M8 38l14-10 10 8 8-6 14 14" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                  stroke-linejoin="round" />
+              </svg>
+              <span>Próximamente</span>
+            </div>
+          </div>
+          <div class="galeria__item" role="listitem">
+            <div class="galeria__placeholder" aria-label="Imagen próximamente">
+              <svg viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg" width="48" height="48"
+                aria-hidden="true">
+                <rect x="8" y="12" width="48" height="36" rx="4" stroke="currentColor" stroke-width="2" />
+                <circle cx="22" cy="26" r="6" stroke="currentColor" stroke-width="2" />
+                <path d="M8 38l14-10 10 8 8-6 14 14" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                  stroke-linejoin="round" />
+              </svg>
+              <span>Próximamente</span>
+            </div>
+          </div>
+          <div class="galeria__item" role="listitem">
+            <div class="galeria__placeholder" aria-label="Imagen próximamente">
+              <svg viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg" width="48" height="48"
+                aria-hidden="true">
+                <rect x="8" y="12" width="48" height="36" rx="4" stroke="currentColor" stroke-width="2" />
+                <circle cx="22" cy="26" r="6" stroke="currentColor" stroke-width="2" />
+                <path d="M8 38l14-10 10 8 8-6 14 14" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                  stroke-linejoin="round" />
+              </svg>
+              <span>Próximamente</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ── ÁREA DE DESCARGAS ── -->
+    <section class="section" id="descargas" aria-labelledby="descargas-heading">
+      <div class="container">
+        <div class="section__intro">
+          <p class="section__eyebrow">Recursos</p>
+          <h2 class="section__heading" id="descargas-heading">Área de descargas</h2>
+          <p class="section__sub">Descarga los materiales informativos y recursos de PlaNex para difundir el proyecto,
+            aplicar el protocolo o usar nuestra iconografía en tu web o redes.</p>
+        </div>
+        <ul class="descargas-grid" role="list" aria-label="Materiales descargables de PlaNex">
+
+          <li class="descarga-card" role="listitem">
+            <div class="descarga-card__icon" aria-hidden="true">
+              <svg viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg" width="40" height="40">
+                <rect x="6" y="4" width="24" height="32" rx="2" stroke="currentColor" stroke-width="2" />
+                <path d="M10 12h16M10 18h16M10 24h10" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
+                <path d="M26 28l4 4m0 0l4-4m-4 4V24" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                  stroke-linejoin="round" />
+              </svg>
+            </div>
+            <div class="descarga-card__body">
+              <h3 class="descarga-card__title">Ficha A5 PlaNex</h3>
+              <p class="descarga-card__desc">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ficha informativa
+                para entidades.</p>
+              <span class="descarga-card__meta">PDF · A5 · 2 páginas</span>
+            </div>
+            <a class="btn btn--download" href="assets/descargas/ficha-a5-planex.pdf" download
+              aria-label="Descargar Ficha A5 PlaNex en PDF">
+              <svg viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg" width="18" height="18"
+                aria-hidden="true">
+                <path d="M10 3v10M6 9l4 4 4-4M4 17h12" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"
+                  stroke-linejoin="round" />
+              </svg>
+              Descargar
+            </a>
+          </li>
+
+          <li class="descarga-card" role="listitem">
+            <div class="descarga-card__icon" aria-hidden="true">
+              <svg viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg" width="40" height="40">
+                <rect x="6" y="4" width="24" height="32" rx="2" stroke="currentColor" stroke-width="2" />
+                <path d="M10 12h16M10 18h16M10 24h10" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
+                <rect x="22" y="24" width="12" height="12" rx="2" fill="var(--clr-bg)" stroke="currentColor"
+                  stroke-width="1.5" />
+                <path d="M25 30l2 2 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"
+                  stroke-linejoin="round" />
+              </svg>
+            </div>
+            <div class="descarga-card__body">
+              <h3 class="descarga-card__title">Protocolo PlaNex v1</h3>
+              <p class="descarga-card__desc">Documento completo con los criterios de los dos niveles de certificación.
+              </p>
+              <span class="descarga-card__meta">PDF · 12 páginas</span>
+            </div>
+            <a class="btn btn--download" href="assets/descargas/protocolo-planex-v1.pdf" download
+              aria-label="Descargar Protocolo PlaNex v1 en PDF">
+              <svg viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg" width="18" height="18"
+                aria-hidden="true">
+                <path d="M10 3v10M6 9l4 4 4-4M4 17h12" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"
+                  stroke-linejoin="round" />
+              </svg>
+              Descargar
+            </a>
+          </li>
+
+          <li class="descarga-card" role="listitem">
+            <div class="descarga-card__icon" aria-hidden="true">
+              <svg viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg" width="40" height="40">
+                <circle cx="14" cy="14" r="6" stroke="currentColor" stroke-width="2" />
+                <circle cx="26" cy="14" r="6" stroke="currentColor" stroke-width="2" />
+                <circle cx="14" cy="26" r="6" stroke="currentColor" stroke-width="2" />
+                <circle cx="26" cy="26" r="6" stroke="currentColor" stroke-width="2" />
+              </svg>
+            </div>
+            <div class="descarga-card__body">
+              <h3 class="descarga-card__title">Pack de iconografía</h3>
+              <p class="descarga-card__desc">Los 8 iconos de necesidades específicas en formato SVG y PNG para tu web o
+                redes.</p>
+              <span class="descarga-card__meta">ZIP · SVG + PNG</span>
+            </div>
+            <a class="btn btn--download" href="assets/descargas/iconografia-planex.zip" download
+              aria-label="Descargar pack de iconografía PlaNex">
+              <svg viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg" width="18" height="18"
+                aria-hidden="true">
+                <path d="M10 3v10M6 9l4 4 4-4M4 17h12" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"
+                  stroke-linejoin="round" />
+              </svg>
+              Descargar
+            </a>
+          </li>
+
+          <li class="descarga-card" role="listitem">
+            <div class="descarga-card__icon" aria-hidden="true">
+              <svg viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg" width="40" height="40">
+                <rect x="4" y="8" width="32" height="24" rx="3" stroke="currentColor" stroke-width="2" />
+                <circle cx="20" cy="20" r="6" stroke="currentColor" stroke-width="2" />
+                <circle cx="20" cy="20" r="2" fill="currentColor" />
+              </svg>
+            </div>
+            <div class="descarga-card__body">
+              <h3 class="descarga-card__title">Stickers PlaNex</h3>
+              <p class="descarga-card__desc">Stickers del sello PlaNex para pegar en tu local, web o materiales de
+                comunicación.</p>
+              <span class="descarga-card__meta">PDF + SVG</span>
+            </div>
+            <a class="btn btn--download" href="assets/descargas/stickers-planex.pdf" download
+              aria-label="Descargar stickers PlaNex">
+              <svg viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg" width="18" height="18"
+                aria-hidden="true">
+                <path d="M10 3v10M6 9l4 4 4-4M4 17h12" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"
+                  stroke-linejoin="round" />
+              </svg>
+              Descargar
+            </a>
+          </li>
+
+        </ul>
+      </div>
+    </section>
+
+    <!-- ── CONTACTO ── -->
+    <section class="section section--alt" id="contacto" aria-labelledby="contacto-heading">
+      <div class="container">
+        <div class="section__intro">
+          <p class="section__eyebrow">Escríbenos</p>
+          <h2 class="section__heading" id="contacto-heading">Contacto</h2>
+        </div>
+
+        <div class="contacto__grid">
+          <div class="contacto__info">
+            <h3>¿Tienes alguna pregunta?</h3>
+            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et
+              dolore magna aliqua.</p>
+
+            <div class="contacto__highlight" role="alert" aria-live="polite">
+              <svg viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg" width="20" height="20"
+                aria-hidden="true">
+                <circle cx="10" cy="10" r="8" stroke="currentColor" stroke-width="1.5" />
+                <path d="M10 6v5M10 13v.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" />
+              </svg>
+              <div>
+                <strong>¿Un espacio no cumple lo prometido?</strong>
+                <p>Usa el formulario y selecciona la opción <em>"Reportar incumplimiento de accesibilidad"</em>. Tu
+                  reporte ayuda a mantener el sistema.</p>
+              </div>
+            </div>
+
+            <div class="contacto__redes">
+              <a href="#" class="contacto__red" aria-label="WhatsApp de PlaNex" rel="noopener noreferrer">
+                <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor" aria-hidden="true">
+                  <path
+                    d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z" />
+                </svg>
+                WhatsApp
+              </a>
+              <a href="#" class="contacto__red" aria-label="Instagram de PlaNex" rel="noopener noreferrer">
+                <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor" aria-hidden="true">
+                  <path
+                    d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z" />
+                </svg>
+                Instagram
+              </a>
+            </div>
+          </div>
+
+          <form class="contacto__form" id="contactForm" action="https://formspree.io/f/XXXXXXXX" method="POST"
+            novalidate aria-label="Formulario de contacto PlaNex">
+
+            <div class="form-group">
+              <label class="form-label" for="nombre">Nombre <span aria-hidden="true">*</span></label>
+              <input class="form-input" type="text" id="nombre" name="nombre" required autocomplete="name"
+                aria-required="true" placeholder="Tu nombre" />
+            </div>
+
+            <div class="form-group">
+              <label class="form-label" for="email">Correo electrónico <span aria-hidden="true">*</span></label>
+              <input class="form-input" type="email" id="email" name="email" required autocomplete="email"
+                aria-required="true" placeholder="tu@correo.es" />
+            </div>
+
+            <div class="form-group">
+              <label class="form-label" for="tipo">Tipo de consulta <span aria-hidden="true">*</span></label>
+              <select class="form-input form-select" id="tipo" name="tipo" required aria-required="true">
+                <option value="">Selecciona una opción</option>
+                <option value="consulta">Consulta general</option>
+                <option value="entidad">Soy una entidad y quiero verificarme</option>
+                <option value="reporte">Reportar incumplimiento de accesibilidad</option>
+                <option value="colaboracion">Propuesta de colaboración</option>
+                <option value="otro">Otro</option>
+              </select>
+            </div>
+
+            <!-- Campo condicional para reportes -->
+            <div class="form-group form-group--reporte" id="reporteGroup" hidden>
+              <label class="form-label" for="espacioReporte">Nombre del espacio a reportar</label>
+              <input class="form-input" type="text" id="espacioReporte" name="espacio_reporte"
+                placeholder="Nombre del espacio o actividad" />
+            </div>
+
+            <div class="form-group">
+              <label class="form-label" for="mensaje">Mensaje <span aria-hidden="true">*</span></label>
+              <textarea class="form-input form-textarea" id="mensaje" name="mensaje" required aria-required="true"
+                rows="5" placeholder="Escribe aquí tu consulta..."></textarea>
+            </div>
+
+            <div class="form-group form-group--check">
+              <label class="form-check">
+                <input type="checkbox" name="privacidad" required aria-required="true" />
+                <span>He leído y acepto la <a href="#" class="link">política de privacidad</a> <span
+                    aria-hidden="true">*</span></span>
+              </label>
+            </div>
+
+            <button class="btn btn--primary btn--full" type="submit">Enviar mensaje</button>
+
+            <div class="form-success" id="formSuccess" hidden role="alert" aria-live="polite">
+              <svg viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg" width="20" height="20"
+                aria-hidden="true">
+                <circle cx="10" cy="10" r="8" stroke="currentColor" stroke-width="1.5" />
+                <path d="M6.5 10l2.5 2.5 4-5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"
+                  stroke-linejoin="round" />
+              </svg>
+              Mensaje enviado correctamente. Nos ponemos en contacto contigo en breve.
+            </div>
+          </form>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ===== FOOTER ===== -->
+  <footer class="site-footer" role="contentinfo">
+    <div class="container">
+      <div class="footer__grid">
+
+        <div class="footer__brand">
+          <a href="#top" class="footer__logo" aria-label="PlaNex – Volver al inicio">
+            <svg viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg" width="30" height="30" aria-hidden="true">
+              <rect width="36" height="36" rx="10" fill="#7048E8"/>
+              <path d="M10 8h9c3.9 0 7 3.1 7 7s-3.1 7-7 7h-5v6H10V8z" fill="white"/>
+              <circle cx="23" cy="11" r="3.5" fill="#7048E8"/>
+            </svg>
+            <span class="logo-text"><span class="logo-pla">Pla</span><span class="logo-nex">Nex</span></span>
+          </a>
+          <p>Hub digital de ocio inclusivo en Córdoba. Centralizamos, validamos y difundimos la oferta de actividades
+            accesibles para personas con diversidad funcional.</p>
+        </div>
+
+        <nav class="footer__nav" aria-label="Navegación del pie de página">
+          <h3 class="footer__nav-title">Navegación</h3>
+          <ul role="list">
+            <li><a href="#mision">Misión</a></li>
+            <li><a href="#quienes">Quiénes somos</a></li>
+            <li><a href="#mapa">Mapa</a></li>
+            <li><a href="#protocolo">Protocolo</a></li>
+            <li><a href="#descargas">Descargas</a></li>
+            <li><a href="#contacto">Contacto</a></li>
+          </ul>
+        </nav>
+
+        <div class="footer__colaboradores">
+          <h3 class="footer__nav-title">Colaboradores</h3>
+          <div class="logos-grid" role="list" aria-label="Logos de colaboradores">
+            <div class="logo-placeholder" role="listitem" aria-label="Córdoba Social Lab">
+              <span>Córdoba<br />Social Lab</span>
+            </div>
+            <div class="logo-placeholder" role="listitem" aria-label="Fundación XUL">
+              <span><img src="assets/logos/logo-xul.png" alt=""></span>
+            </div>
+            <div class="logo-placeholder" role="listitem" aria-label="Fundación Kutxabank">
+              <span><img src="assets/logos/kutxa.png" alt=""></span>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <div class="footer__bottom">
+        <p>© 2025 PlaNex · Grupo Nexo, Universidad Loyola Córdoba</p>
+        <div class="footer__links">
+          <a href="#">Política de privacidad</a>
+          <a href="#">Aviso legal</a>
+          <a href="#">Accesibilidad</a>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Leaflet JS -->
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+    integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV/XN/WLs=" crossorigin=""></script>
+  <script src="js/map.js"></script>
+  <script src="js/main.js"></script>
+</body>
+
+</html>
