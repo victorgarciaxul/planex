@@ -1,123 +1,156 @@
 /* ============================================================
    PlaNex – Mapa interactivo (Leaflet + OpenStreetMap)
-   Córdoba, España · Ubicaciones placeholder
+   Zona: Centro histórico de Córdoba – Medina & Axerquía
    ============================================================ */
 
-const CORDOBA = [37.8882, -4.7794];
+/* Centro del mapa: Plaza de las Tendillas (corazón de la Medina) */
+const CORDOBA_CENTER = [37.8794, -4.7826];
+const ZOOM_INICIAL   = 15;
 
+/* Ubicaciones placeholder — sustituir por espacios reales verificados */
 const LOCATIONS = [
   {
     id: 1,
-    name: 'Centro Cultural Lorem Ipsum',
-    desc: 'Espacio cultural con accesibilidad verificada para todos los públicos.',
+    name: 'Mezquita-Catedral de Córdoba',
+    desc: 'Monumento accesible con itinerario adaptado, audioguía y servicio de atención especializada.',
     level: 'sello',
-    lat: 37.8901, lng: -4.7801,
-    icons: ['Movilidad', 'Visual', 'LSE'],
+    lat: 37.8791, lng: -4.7797,
+    icons: ['Movilidad', 'Visual', 'Cognitiva'],
   },
   {
     id: 2,
-    name: 'Museo Ipsum Córdoba',
-    desc: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
-    level: 'base',
-    lat: 37.8845, lng: -4.7738,
-    icons: ['Movilidad', 'Sonidos'],
+    name: 'Alcázar de los Reyes Cristianos',
+    desc: 'Jardines y salas con acceso adaptado y señalética inclusiva.',
+    level: 'sello',
+    lat: 37.8766, lng: -4.7864,
+    icons: ['Movilidad', 'Visual', 'LSE'],
   },
   {
     id: 3,
-    name: 'Polideportivo Lorem',
-    desc: 'Instalaciones deportivas adaptadas con protocolo PlaNex Nivel Base.',
+    name: 'Plaza de la Corredera',
+    desc: 'Espacio público sin barreras arquitectónicas con servicios accesibles.',
     level: 'base',
-    lat: 37.8955, lng: -4.7889,
-    icons: ['Movilidad', 'Cognitiva'],
+    lat: 37.8815, lng: -4.7769,
+    icons: ['Movilidad'],
   },
   {
     id: 4,
-    name: 'Teatro Adipiscing',
-    desc: 'Teatro con bucle magnético, subtitulado y plazas reservadas.',
-    level: 'sello',
-    lat: 37.8836, lng: -4.7792,
-    icons: ['LSE', 'Visual', 'Sonidos', 'Movilidad'],
+    name: 'Palacio de Viana',
+    desc: 'Visitas con itinerario adaptado y material en lectura fácil disponible.',
+    level: 'base',
+    lat: 37.8870, lng: -4.7731,
+    icons: ['Movilidad', 'Cognitiva'],
   },
   {
     id: 5,
-    name: 'Biblioteca Lorem Elit',
-    desc: 'Fondo en formatos accesibles y sala de lectura fácil.',
+    name: 'Teatro Góngora',
+    desc: 'Sala con bucle magnético, subtitulado y plazas reservadas para PMR.',
     level: 'sello',
-    lat: 37.8870, lng: -4.7850,
-    icons: ['Cognitiva', 'Visual', 'Movilidad'],
+    lat: 37.8836, lng: -4.7792,
+    icons: ['LSE', 'Sonidos', 'Movilidad', 'Visual'],
   },
 ];
 
-/* ── Iconos de marcador personalizados ── */
+/* ── Icono de marcador PlaNex ── */
 function createIcon(level) {
-  const color = level === 'sello' ? '#2D7A4F' : '#0F5C8A';
-  const svg = `
-    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 42" width="32" height="42">
-      <path d="M16 0C7.2 0 0 7.2 0 16c0 11 14 26 16 26s16-15 16-26C32 7.2 24.8 0 16 0z"
-        fill="${color}" stroke="#fff" stroke-width="2"/>
-      <circle cx="16" cy="16" r="7" fill="white" opacity="0.9"/>
-    </svg>`;
+  const isPurple = level === 'sello';
+  const fill     = isPurple ? '#7048E8' : '#0F5C8A';
+  const ring     = isPurple ? '#C4B5FD' : '#BAD7F2';
+
+  const svg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 36 48" width="36" height="48">
+    <filter id="shadow" x="-30%" y="-10%" width="160%" height="140%">
+      <feDropShadow dx="0" dy="2" stdDeviation="2" flood-color="rgba(0,0,0,.35)"/>
+    </filter>
+    <path d="M18 0C8.06 0 0 8.06 0 18c0 12.42 16 30 18 30s18-17.58 18-30C36 8.06 27.94 0 18 0z"
+      fill="${fill}" filter="url(#shadow)"/>
+    <circle cx="18" cy="18" r="9" fill="white" opacity=".95"/>
+    <circle cx="18" cy="18" r="5" fill="${fill}"/>
+    <circle cx="18" cy="18" r="8" fill="none" stroke="${ring}" stroke-width="1.5"/>
+  </svg>`;
+
   return L.divIcon({
-    className: '',
-    html: svg,
-    iconSize: [32, 42],
-    iconAnchor: [16, 42],
-    popupAnchor: [0, -44],
+    className:   '',
+    html:        svg,
+    iconSize:    [36, 48],
+    iconAnchor:  [18, 48],
+    popupAnchor: [0, -52],
   });
 }
 
-/* ── Contenido popup ── */
+/* ── HTML del popup ── */
 function popupHTML(loc) {
-  const levelLabel = loc.level === 'sello' ? 'Sello PlaNex' : 'Nivel Base';
-  const levelClass = `popup-level--${loc.level}`;
-  const iconsList   = loc.icons.map(i => `<span>${i}</span>`).join(' · ');
+  const isS  = loc.level === 'sello';
+  const label = isS ? '★ Sello PlaNex' : '● Nivel Base';
+  const cls   = isS ? 'popup-level--sello' : 'popup-level--base';
+  const tags  = loc.icons
+    .map(i => `<span class="popup-tag">${i}</span>`)
+    .join('');
   return `
-    <div>
-      <div class="popup-level ${levelClass}">● ${levelLabel}</div>
+    <div class="popup-inner">
+      <span class="popup-level ${cls}">${label}</span>
       <p class="popup-title">${loc.name}</p>
       <p class="popup-desc">${loc.desc}</p>
-      <p class="popup-desc" style="margin-top:.4rem;color:#6B7280">${iconsList}</p>
+      <div class="popup-tags">${tags}</div>
     </div>`;
 }
 
-/* ── Inicializar mapa ── */
-document.addEventListener('DOMContentLoaded', () => {
+/* ── Inicialización robusta ── */
+function initMap() {
   const mapEl = document.getElementById('map');
-  if (!mapEl) return;
+  if (!mapEl || typeof L === 'undefined') {
+    /* Si Leaflet aún no está disponible, reintentamos en 200ms */
+    setTimeout(initMap, 200);
+    return;
+  }
+
+  /* Evitar doble inicialización */
+  if (mapEl._leaflet_id) return;
 
   const map = L.map('map', {
-    center: CORDOBA,
-    zoom: 14,
-    zoomControl: true,
+    center:          CORDOBA_CENTER,
+    zoom:            ZOOM_INICIAL,
+    zoomControl:     false,      /* reubicamos el control abajo a la izquierda */
     scrollWheelZoom: false,
+    tap:             false,      /* evita bugs en iOS con touch */
   });
 
-  /* Tiles OpenStreetMap */
-  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-    attribution: '© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
-    maxZoom: 19,
-  }).addTo(map);
+  /* Control de zoom en esquina inferior izquierda */
+  L.control.zoom({ position: 'bottomleft' }).addTo(map);
 
-  /* Markers */
-  const markers = [];
+  /* Tiles – CartoDB Positron (más limpio que OSM estándar y HTTPS nativo) */
+  L.tileLayer(
+    'https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png',
+    {
+      attribution: '© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> · © <a href="https://carto.com/">CARTO</a>',
+      subdomains:  'abcd',
+      maxZoom:     19,
+    }
+  ).addTo(map);
+
+  /* Marcadores */
+  const allMarkers = [];
   LOCATIONS.forEach(loc => {
     const marker = L.marker([loc.lat, loc.lng], {
-      icon: createIcon(loc.level),
-      alt: loc.name,
+      icon:  createIcon(loc.level),
+      alt:   loc.name,
       title: loc.name,
     })
-      .bindPopup(popupHTML(loc), { maxWidth: 260 })
+      .bindPopup(popupHTML(loc), {
+        maxWidth:    280,
+        className:   'planex-popup',
+        closeButton: true,
+      })
       .addTo(map);
 
     marker._planexLevel = loc.level;
-    markers.push(marker);
+    allMarkers.push(marker);
   });
 
-  /* Activar scroll al hacer clic en el mapa */
-  mapEl.addEventListener('click', () => { map.scrollWheelZoom.enable(); });
-  mapEl.addEventListener('mouseleave', () => { map.scrollWheelZoom.disable(); });
+  /* Activar scroll-zoom al interactuar con el mapa */
+  mapEl.addEventListener('click',      () => map.scrollWheelZoom.enable());
+  mapEl.addEventListener('mouseleave', () => map.scrollWheelZoom.disable());
 
-  /* Filtros */
+  /* Filtros de nivel */
   document.querySelectorAll('.filter-btn').forEach(btn => {
     btn.addEventListener('click', () => {
       const filter = btn.dataset.filter;
@@ -129,13 +162,38 @@ document.addEventListener('DOMContentLoaded', () => {
       btn.classList.add('filter-btn--active');
       btn.setAttribute('aria-pressed', 'true');
 
-      markers.forEach(m => {
+      allMarkers.forEach(m => {
         if (filter === 'all' || m._planexLevel === filter) {
           m.addTo(map);
         } else {
-          m.remove();
+          map.removeLayer(m);
         }
       });
     });
   });
-});
+
+  /*
+    invalidateSize resuelve el problema de renderizado cuando el
+    contenedor tiene zoom CSS aplicado (widget de accesibilidad).
+    Lo llamamos varias veces para garantizar que los tiles carguen.
+  */
+  map.invalidateSize();
+  setTimeout(() => map.invalidateSize(), 100);
+  setTimeout(() => map.invalidateSize(), 400);
+
+  /* ResizeObserver — si el contenedor cambia de tamaño (responsive, zoom) */
+  if (window.ResizeObserver) {
+    new ResizeObserver(() => map.invalidateSize()).observe(mapEl);
+  }
+}
+
+/*
+  Arranque: usamos 'load' (todos los recursos cargados) en lugar de
+  DOMContentLoaded para garantizar que Leaflet CDN esté disponible.
+  Si DOMContentLoaded ya ha ocurrido, ejecutamos inmediatamente.
+*/
+if (document.readyState === 'complete') {
+  initMap();
+} else {
+  window.addEventListener('load', initMap);
+}

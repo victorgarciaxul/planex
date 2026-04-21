@@ -745,13 +745,7 @@ button { cursor: pointer; font-family: inherit; }
 .badge-dot--base  { background: var(--clr-primary); }
 .badge-dot--sello { background: var(--clr-success); }
 
-#map {
-  height: var(--map-height);
-  width: 100%;
-  margin-block: var(--space-sm);
-  border-top: 2px solid var(--clr-border);
-  border-bottom: 2px solid var(--clr-border);
-}
+/* altura explícita definida junto a los estilos de Leaflet al final del CSS */
 
 .mapa__note {
   display: flex;
@@ -1357,25 +1351,83 @@ button { cursor: pointer; font-family: inherit; }
 
 /* ── Leaflet overrides ── */
 .leaflet-popup-content-wrapper {
-  border-radius: var(--radius);
-  box-shadow: var(--shadow-md);
+  border-radius: var(--radius-lg) !important;
+  box-shadow: var(--shadow-lg) !important;
+  border: 1px solid var(--clr-border);
+  padding: 0 !important;
+  overflow: hidden;
 }
 .leaflet-popup-content {
   font-family: var(--font-body);
   font-size: 0.9rem;
   line-height: 1.5;
+  margin: 0 !important;
+}
+.leaflet-popup-tip-container { margin-top: -1px; }
+
+/* Contenido del popup */
+.popup-inner {
+  padding: 1rem 1.1rem;
 }
 .popup-level {
   display: inline-flex;
   align-items: center;
   gap: 0.3rem;
-  padding: 0.2rem 0.6rem;
+  padding: 0.2rem 0.65rem;
   border-radius: 100px;
-  font-size: 0.75rem;
-  font-weight: 700;
-  margin-bottom: 0.4rem;
+  font-size: 0.7rem;
+  font-weight: 800;
+  letter-spacing: .04em;
+  text-transform: uppercase;
+  margin-bottom: 0.5rem;
 }
-.popup-level--base  { background: var(--clr-primary-light); color: var(--clr-primary-dark); }
-.popup-level--sello { background: var(--clr-success-light); color: var(--clr-success); }
-.popup-title { font-family: var(--font-heading); font-weight: 700; font-size: 1rem; margin-bottom: 0.2rem; }
-.popup-desc  { font-size: 0.825rem; color: var(--clr-text-muted); }
+.popup-level--base  {
+  background: var(--clr-primary-light);
+  color: var(--clr-primary-dark);
+}
+.popup-level--sello {
+  background: #EDE9FE;
+  color: var(--clr-primary);
+}
+.popup-title {
+  font-family: var(--font-heading);
+  font-weight: 800;
+  font-size: 0.95rem;
+  margin-bottom: 0.3rem;
+  color: var(--clr-text);
+  line-height: 1.3;
+}
+.popup-desc {
+  font-size: 0.8rem;
+  color: var(--clr-text-muted);
+  line-height: 1.5;
+  margin-bottom: 0.6rem;
+}
+.popup-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.3rem;
+}
+.popup-tag {
+  padding: 0.15rem 0.5rem;
+  background: var(--clr-surface);
+  border: 1px solid var(--clr-border);
+  border-radius: 100px;
+  font-size: 0.7rem;
+  font-weight: 600;
+  color: var(--clr-text-muted);
+}
+
+/* Altura del mapa – explícita para evitar problemas con CSS vars */
+#map {
+  height: 520px;
+  min-height: 320px;
+  width: 100%;
+  margin-block: var(--space-sm);
+  border-top: 2px solid var(--clr-border);
+  border-bottom: 2px solid var(--clr-border);
+}
+
+@media (max-width: 640px) {
+  #map { height: 380px; }
+}
