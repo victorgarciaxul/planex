@@ -596,6 +596,7 @@ button { cursor: pointer; font-family: inherit; }
 .mision__text {
   max-width: 72ch;
   margin-bottom: var(--space-xl);
+   text-align: center;
 }
 .mision__text .lead {
   font-size: 1.125rem;
