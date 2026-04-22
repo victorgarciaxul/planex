@@ -1498,16 +1498,17 @@ button { cursor: pointer; font-family: inherit; }
   color: var(--clr-text-muted);
 }
 
-/* Altura del mapa – explícita para evitar problemas con CSS vars */
+/* Mapa – sangra de borde a borde sin márgenes ni bordes */
+#mapa { padding-block-end: 0; }
+
 #map {
-  height: 520px;
+  height: 580px;
   min-height: 320px;
   width: 100%;
-  margin-block: var(--space-sm);
-  border-top: 2px solid var(--clr-border);
-  border-bottom: 2px solid var(--clr-border);
+  margin-block: 0;
+  display: block;
 }
 
 @media (max-width: 640px) {
-  #map { height: 380px; }
+  #map { height: 400px; }
 }
