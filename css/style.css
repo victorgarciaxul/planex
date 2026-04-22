@@ -593,14 +593,10 @@ button { cursor: pointer; font-family: inherit; }
 /* ============================================================
    Misión
    ============================================================ */
-.mision__grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: var(--space-xl);
-  align-items: start;
+.mision__text {
+  max-width: 72ch;
   margin-bottom: var(--space-xl);
 }
-
 .mision__text .lead {
   font-size: 1.125rem;
   font-weight: 500;
@@ -610,26 +606,81 @@ button { cursor: pointer; font-family: inherit; }
 .mision__text p { color: var(--clr-text-muted); margin-bottom: 0.75rem; }
 [data-contrast="high"] .mision__text p { color: #ccc; }
 
+/* Grid de tarjetas — 3 columnas bajo el texto */
 .mision__cards {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  gap: var(--space-sm);
+  gap: 1.5rem;
+  margin-bottom: var(--space-xl);
 }
 
+/* Tarjeta rediseñada */
 .mision__card {
   display: flex;
-  align-items: flex-start;
-  gap: 1rem;
-  padding: 1.25rem;
-  background: var(--clr-surface);
-  border-radius: var(--radius);
-  border-left: 4px solid var(--clr-primary);
-  transition: box-shadow var(--transition);
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  padding: 2.25rem 1.75rem 2rem;
+  background: #fff;
+  border-radius: 1.25rem;
+  border: 1.5px solid rgba(112,72,232,.1);
+  box-shadow: 0 2px 16px rgba(112,72,232,.07), 0 1px 4px rgba(0,0,0,.04);
+  transition: transform .22s ease, box-shadow .22s ease;
+  position: relative;
 }
-.mision__card:hover { box-shadow: var(--shadow-md); }
-.mision__card-icon { color: var(--clr-primary); flex-shrink: 0; }
-.mision__card h3 { font-family: var(--font-heading); font-size: 1rem; font-weight: 700; margin-bottom: 0.25rem; }
-.mision__card p { font-size: 0.875rem; color: var(--clr-text-muted); }
+.mision__card::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: linear-gradient(135deg, rgba(112,72,232,.04) 0%, transparent 60%);
+  pointer-events: none;
+}
+.mision__card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 10px 32px rgba(112,72,232,.14), 0 2px 8px rgba(0,0,0,.06);
+}
+
+/* Número de paso */
+.mision__card-step {
+  font-family: var(--font-heading);
+  font-size: 0.7rem;
+  font-weight: 900;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--clr-primary);
+  opacity: .6;
+  margin-bottom: 1rem;
+}
+
+/* Círculo de icono */
+.mision__card-icon {
+  width: 72px;
+  height: 72px;
+  border-radius: 50%;
+  background: var(--clr-surface);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 1.25rem;
+  color: var(--clr-primary);
+  flex-shrink: 0;
+  box-shadow: 0 0 0 6px rgba(112,72,232,.07);
+}
+
+.mision__card h3 {
+  font-family: var(--font-heading);
+  font-size: 1.05rem;
+  font-weight: 800;
+  color: var(--clr-text);
+  margin-bottom: 0.65rem;
+  line-height: 1.25;
+}
+.mision__card p {
+  font-size: 0.875rem;
+  color: var(--clr-text-muted);
+  line-height: 1.65;
+}
 [data-contrast="high"] .mision__card p { color: #aaa; }
 
 /* Stats */
@@ -1264,8 +1315,7 @@ button { cursor: pointer; font-family: inherit; }
 
 /* Tablet */
 @media (max-width: 900px) {
-  .mision__grid    { grid-template-columns: 1fr; }
-  .mision__cards   { grid-template-columns: repeat(3, 1fr); } /* mantiene 3 col en tablet */
+  .mision__cards   { grid-template-columns: repeat(3, 1fr); }
   .niveles-grid    { grid-template-columns: 1fr; }
   .contacto__grid  { grid-template-columns: 1fr; }
   .footer__grid    { grid-template-columns: 1fr 1fr; }
@@ -1302,9 +1352,8 @@ button { cursor: pointer; font-family: inherit; }
   .btn { width: 100%; justify-content: center; }
   .btn--download { width: auto; }
 
-  /* ── Fix misión: 1 columna en móvil ── */
+  /* Misión: 1 columna en móvil */
   .mision__cards  { grid-template-columns: 1fr; }
-  .mision__card   { flex-direction: row; align-items: center; }
 
   .galeria__grid  { grid-template-columns: 1fr 1fr; }
   .iconos-grid    { grid-template-columns: 1fr 1fr; }
