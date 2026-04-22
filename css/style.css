@@ -1498,13 +1498,20 @@ button { cursor: pointer; font-family: inherit; }
   color: var(--clr-text-muted);
 }
 
-/* Mapa – sangra de borde a borde sin márgenes ni bordes */
-#mapa { padding-block-end: 0; }
+/* Mapa – 100% ancho de pantalla (full-bleed) */
+#mapa {
+  padding-block-end: 0;
+  overflow-x: hidden; /* evita scrollbar horizontal */
+}
 
 #map {
   height: 580px;
   min-height: 320px;
-  width: 100%;
+  /* Full-bleed: rompe cualquier contenedor padre */
+  width:  100vw;
+  position: relative;
+  left: 50%;
+  transform: translateX(-50%);
   margin-block: 0;
   display: block;
 }
