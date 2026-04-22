@@ -594,9 +594,10 @@ button { cursor: pointer; font-family: inherit; }
    Misión
    ============================================================ */
 .mision__text {
-  max-width: 72ch;
+  max-width: 68ch;
+  margin-inline: auto;
   margin-bottom: var(--space-xl);
-   text-align: center;
+  text-align: center;
 }
 .mision__text .lead {
   font-size: 1.125rem;
