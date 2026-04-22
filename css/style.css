@@ -612,7 +612,7 @@ button { cursor: pointer; font-family: inherit; }
 
 .mision__cards {
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: repeat(3, 1fr);
   gap: var(--space-sm);
 }
 
@@ -1265,7 +1265,7 @@ button { cursor: pointer; font-family: inherit; }
 /* Tablet */
 @media (max-width: 900px) {
   .mision__grid    { grid-template-columns: 1fr; }
-  .mision__cards   { grid-template-columns: 1fr 1fr; } /* mantiene 2 col en tablet */
+  .mision__cards   { grid-template-columns: repeat(3, 1fr); } /* mantiene 3 col en tablet */
   .niveles-grid    { grid-template-columns: 1fr; }
   .contacto__grid  { grid-template-columns: 1fr; }
   .footer__grid    { grid-template-columns: 1fr 1fr; }
