@@ -233,11 +233,10 @@ button { cursor: pointer; font-family: inherit; }
   border-radius: 50%;
   background: #25D366;
   color: #fff;
-  border: 3px solid #fff;
+  border: 1px solid #fff;
   display: flex;
   align-items: center;
   justify-content: center;
-  box-shadow: 0 4px 14px rgba(37,211,102,.45);
   transition: transform .2s ease, box-shadow .2s ease;
   text-decoration: none;
 }
@@ -265,11 +264,10 @@ button { cursor: pointer; font-family: inherit; }
   border-radius: 50%;
   background: var(--clr-primary);
   color: #fff;
-  border: 3px solid #fff;
+  border: 1px solid #fff;
   display: flex;
   align-items: center;
   justify-content: center;
-  box-shadow: 0 4px 16px rgba(112,72,232,.45);
   transition: background var(--transition), transform var(--transition);
 }
 .a11y-toggle:hover  { background: var(--clr-primary-dark); transform: scale(1.07); }
@@ -715,13 +713,27 @@ button { cursor: pointer; font-family: inherit; }
    Quiénes somos
    ============================================================ */
 .quienes__block {
+   text-align: center;
   background: var(--clr-bg);
   border-radius: var(--radius-lg);
   padding: var(--space-lg);
   margin-bottom: var(--space-lg);
   box-shadow: var(--shadow-sm);
 }
-.quienes__block--xul { margin-bottom: 0; }
+.quienes__logos {
+  display: flex;
+  justify-content: center;       /* centra horizontalmente */
+  align-items: center;
+  gap: 100px;                     /* espacio entre logos */
+  margin-top: 10px;
+}
+
+/* Contenedor de cada logo */
+.quienes__logos img {
+  width: 140px;       /* mismo ancho para todos */
+  height: 60px;       /* mismo alto para todos */
+  object-fit: contain; /* mantiene proporción sin deformar */
+}
 
 .quienes__badge {
   display: inline-block;
@@ -1216,7 +1228,7 @@ button { cursor: pointer; font-family: inherit; }
    ============================================================ */
 .site-footer {
   background: var(--clr-text);
-  color: rgba(255,255,255,.8);
+  color: white;
   padding-block: var(--space-xl);
 }
 [data-contrast="high"] .site-footer { background: #000; border-top: 2px solid #333; }
@@ -1267,7 +1279,6 @@ button { cursor: pointer; font-family: inherit; }
 
 .logo-placeholder {
   padding: 0.75rem;
-  border: 1px solid rgba(255,255,255,.15);
   border-radius: var(--radius);
   display: flex;
   align-items: center;
@@ -1275,7 +1286,7 @@ button { cursor: pointer; font-family: inherit; }
   text-align: center;
   font-size: 0.75rem;
   color: rgba(255,255,255,.4);
-  background: rgba(255,255,255,.05);
+  background: white;
   min-height: 60px;
 }
 
